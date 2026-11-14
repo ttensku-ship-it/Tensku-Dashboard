@@ -18,7 +18,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
@@ -33,9 +32,9 @@ public class TenskuDashboardClient implements ClientModInitializer {
         KeyMapping.Category category = KeyMapping.Category.register(
                 Identifier.fromNamespaceAndPath("tensku_dashboard", "main"));
         openKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-                "key.tensku_dashboard.open", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, category));
+                "key.tensku_dashboard.open", InputConstants.Type.KEYSYM, InputConstants.KEY_K, category));
         danceKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-                "key.tensku_dashboard.dance", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_N, category));
+                "key.tensku_dashboard.dance", InputConstants.Type.KEYSYM, InputConstants.KEY_N, category));
 
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             while (openKey.consumeClick()) mc.setScreenAndShow(new DashboardScreen());
@@ -108,12 +107,11 @@ public class TenskuDashboardClient implements ClientModInitializer {
     // The always-on overlay: text, character, balance panel, auction timer, winner animation
     static void renderHud(GuiGraphicsExtractor g, DeltaTracker dt) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.options.hideGui) return;
         int W = mc.getWindow().getGuiScaledWidth(), H = mc.getWindow().getGuiScaledHeight();
         float t = System.currentTimeMillis() / 1000f;
 
         PixelText.drawOverlay(g, W, H, t);
-        if (mc.screen != null) return;
+        if (mc.gui.screen() != null) return;
 
         if (Settings.d.charOn) {
             float s = 2f;
